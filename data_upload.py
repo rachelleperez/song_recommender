@@ -177,7 +177,7 @@ track_url = 'https://open.spotify.com/track/6v0UJD4a2FtleHeSYVX02A?si=0095b20177
 
 print("WELCOME TO THIS APP! ENTER A SPOTIFY SONG LINK AND GET A PLAYLIST OF SIMILAR SONGS")
 print()
-print('Enter a Song Link (URL):')
+print('Enter a Spotify Song Link (URL):')
 track_url = input().strip() # remove leading and trailing spaces
 track_uri = get_track_uri(track_url)
 track_features = get_similar_tracks(track_uri, sp) #for all tracks
