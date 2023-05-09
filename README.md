@@ -11,9 +11,17 @@
 ### Data Warehouse
 The data for all song candidates is generatated via the python script `source_tracks.py` and saved in a BigQuery table.
 
-### User Behavior:
+![BigQuery Schema](bq_schema.JPG)
+
+### User Behavior (via Command Line Interface)
 * Data In: Spotify Song Link (URL)
 * Data Out: 20 Similar Spotify songs
+
+### Dashboard
+
+An exploration of Spotify's workout songs extracted for this project can be found in [this dashboard](https://lookerstudio.google.com/reporting/8b9af529-8207-443b-887e-e5cfb696315f). 
+
+![Spotify Workout Songs](dash.JPG)
 
 ### Tech Tools
 * Spotify API, via Spotipy Python library
