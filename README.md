@@ -1,7 +1,7 @@
 # Creating a Mood-based Workout Playlist (Spotify)
 
 ### App Description
-* This simple app takes in a Spotify Song Link (URL) that best describes what mood the user is into and outputs a playlist of 20 workout sonds
+* This simple app takes in a Spotify Song Link (URL) that best describes what mood the user is into and outputs a playlist of 20 workout songs
 * There are ~5K song candidates extracted from Spotify's API from all playlists listed as [Popular Workout Playlists](https://open.spotify.com/genre/section0JQ5IMCbQBLsb9HwPKg2Us) 
 * Song features for candidates are loaded in a BigQuery table to be manually refreshed periodically
 * Song recommendations are based on content-based filtering. 
@@ -13,7 +13,7 @@ The data for all song candidates is generatated via the python script `source_tr
 
 ### User Behavior:
 * Data In: Spotify Song Link (URL)
-* Data Out: 20 Simlar Spotify songs
+* Data Out: 20 Similar Spotify songs
 
 ### Tech Tools
 * Spotify API, via Spotipy Python library
