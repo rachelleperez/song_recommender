@@ -1,5 +1,13 @@
 # Creating a Mood-based Workout Playlist (Spotify)
 
+### Background
+
+As per a [CDC’s website](https://www.cdc.gov/physicalactivity/basics/adults/index.htm#:~:text=Physical%20activity%20is%20anything%20that,Physical%20Activity%20Guidelines%20for%20Americans.), “each week adults need 150 minutes of moderate-intensity physical activity and 2 days of muscle strengthening activity”. Workouts often incorporate music and evidence shows “incorporating personal choice in selecting music increases performance” ([Source](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8167645/)). Spotify is the world’s top streaming company, but with [over 100 million tracks](https://newsroom.spotify.com/company-info/), how can a user quickly choose songs to work out to. 
+
+### Objective
+
+The goal of this project will be to provide a tool and framework to generate a **simple workout playlist** of 20 songs based on 1 user-selected song that best describes the user’s intended workout mood.
+
 ### App Description
 * This simple app takes in a Spotify Song Link (URL) that best describes what mood the user is into and outputs a playlist of 20 workout songs
 * There are ~5K song candidates extracted from Spotify's API from all playlists listed as [Popular Workout Playlists](https://open.spotify.com/genre/section0JQ5IMCbQBLsb9HwPKg2Us) 
