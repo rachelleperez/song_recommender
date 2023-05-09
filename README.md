@@ -28,3 +28,4 @@ This is an MVP project. It's basic structure including selection of data tools i
 * Dynamically generate workout playlist uris via web parsing
 * Partition BQ table by date to save past versions of song candidates
 * Move to cloud
+* Outputs to user song url instead of song uri
