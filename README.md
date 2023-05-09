@@ -8,7 +8,7 @@
 * Songs in Bigquery are extracted and each song is given a similarity score to input song via cosine distance.
 * The songs most similar to song selected are printed.
 
-## Data Warehouse
+### Data Warehouse
 The data for all song candidates is generatated via the python script `source_tracks.py` and saved in a BigQuery table.
 
 ### User Behavior:
