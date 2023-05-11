@@ -26,9 +26,11 @@ The data for all song candidates is generatated via the python script `source_tr
 * Data Out: 20 Similar Spotify songs
 
 **Demo 1: "How You Like That by Blackpink"**
+
 ![BigQuery Schema](cli_3.JPG)
 
 **Demo 2: "The Jumpoff by Lil' Kim"**
+
 ![BigQuery Schema](cli_2.JPG)
 
 ### Dashboard
