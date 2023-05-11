@@ -75,6 +75,24 @@ def get_track_properties(track_uri):
     track_properties['artist'] = track_metadata['artists'][0]['name']
     return track_properties
 
+# takes in two vectors and calculates similarity
+
+def calculate_cosine_similarity(input_vector, candidate_features):
+    # print("before input vector")
+    # print("shape in_pre: ",input_features.shape )
+    # print("type in_pre: ",type(input_features))
+    # input_vector = input_features
+    # print("shape in_after: ",input_vector.shape )
+    # print("data type in_after: ",type(input_vector))
+    # print("before input vector")
+    candidate_vector = candidate_features.squeeze()
+    # print("shape candidate: ",candidate_vector.shape )
+    # print("data type candidate: ",type(candidate_vector))
+    out = cosine_similarity([input_vector, candidate_vector])[0][1]
+    # print("shape out: ", out.shape )
+    # print("value out: ", out)
+    return out
+
 
 # Gets similar tracks from BigQuery table using content-based filtering
 def get_similar_track_uris(track_uri):
@@ -90,34 +108,53 @@ def get_similar_track_uris(track_uri):
     candidates_df = client.query(query).to_dataframe() #all candidates ONLY
 
     # Generate input_track_fatures and save on df
-    input_track_features = get_track_properties(track_uri, sp)
-    input_track_df = pd.DataFrame(input_track_features, columns=['uri', 'danceability', 'energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','duration_ms','time_signature'])
+    track_features = sp.audio_features(track_uri)[0]
+    track_row = (track_features['uri'], track_features['danceability'], track_features['energy'], track_features['key'], track_features['loudness'], track_features['mode'], track_features['speechiness'], track_features['acousticness'], track_features['instrumentalness'], track_features['liveness'], track_features['valence'], track_features['tempo'], track_features['duration_ms'], track_features['time_signature'])
+ 
+    input_track_df = pd.DataFrame([track_row], columns=['uri', 'danceability', 'energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','duration_ms','time_signature'])
 
     # combine track features
-
-    df = pd.concat(input_track_df, candidates_df)
+    # print(input_track_df.head())
+    # print(candidates_df.head())
+    df = pd.concat([input_track_df, candidates_df])
+    # print(df.head())
 
     # Calculates similarity
-    input_track_features = df[df['uri'] == track_uri].iloc[0][1:] #starting from 2nd column
-    df['similarity'] = df[df['uri'] != track_uri].iloc[:, 1:].apply(lambda x: cosine_similarity([input_track_features, x])[0][1], axis=1)
-    similar_tracks = df.sort_values(by='similarity', ascending=False).head(20)
+
+    features =['danceability', 'energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','duration_ms','time_signature']
+
+    input_track_features = df.loc[df['uri'] == track_uri, features]
+    if input_track_features.empty:
+        raise ValueError("Error in creating input feaure DF")
+    else:
+        input_track_features = input_track_features.iloc[0]
+
+
+    df_filtered = df.loc[df['uri'] != track_uri, features].dropna()
+    df['similarity'] = df_filtered.apply(lambda x: calculate_cosine_similarity(input_track_features, x), axis=1) #axis=1 for row
+
+    similar_tracks = df.loc[df['uri'] != track_uri].sort_values(by='similarity', ascending=False).head(20)
 
     # Creates list of uris
     track_uris = similar_tracks['uri'].tolist()
 
     return track_uris
 
+
+
 # display info
 def display_similar_songs (track_uris):
     # extract metadata
     metadata = {}
     for uri in track_uris:
-        metadata[uri] = get_track_properties(track_uri) #returns {'name': x, 'artist': x}
+        metadata[uri] = get_track_properties(uri) #returns {'name': x, 'artist': x}
 
     # display output
     track_num = 1
-    for uri, meta in metadata:
-        print(f"Track: {track_num}: {meta['name']} by {meta['artist']} ({uri})")
+    for uri, meta in metadata.items():
+        current_uri = uri
+        current_meta = meta
+        print(f"Track: {track_num}: {current_meta['name']} by {current_meta['artist']} ({uri})")
         track_num += 1
 
 # display info
@@ -131,8 +168,12 @@ def display_input_song (uri):
 track_uri_1 = 'spotify:track:6v0UJD4a2FtleHeSYVX02A?si=3d28829c47ba4fb7'  
 track_url_1 = 'https://open.spotify.com/track/6v0UJD4a2FtleHeSYVX02A?si=0095b201771d4357' # I Love Wine by Adele
 track_url_2 = 'https://open.spotify.com/track/6UZS3KgNc0NF13bbtQTzD6?si=b0a8bb86665544e9' #The Jump off Lil Kim
+track_url_3 = 'https://open.spotify.com/track/7p2ewixAShLpjDZrnzZK7c?si=187e1bf2c4a443a5' #Get Up 10 by Cardi B
+track_url_4 = "https://open.spotify.com/track/4LRPiXqCikLlN15c3yImP7?si=350937d12e514a56" # As it was by Harry Styles
+track_url_5 = "https://open.spotify.com/track/4SFknyjLcyTLJFPKD2m96o?si=8fff8bc4bdee4651" #How you like that by Black Pink
 
 
+print()
 print("WELCOME TO THIS APP!")
 print("ENTER A SPOTIFY SONG LINK THAT MATCHES THE MOOD OF YOUR WORKOUT TO GET THE IDEAL WORKOUT PLAYLIST BASED ON SIMILAR SONGS")
 print()
@@ -141,6 +182,7 @@ print('Enter a Spotify Song Link (URL):')
 # Extract url and print input song
 track_url = input().strip() # remove leading and trailing spaces
 track_uri = get_track_uri(track_url)
+print()
 display_input_song (track_uri)
 print()
 
@@ -149,4 +191,5 @@ similar_track_uris = get_similar_track_uris(track_uri)
 print("Here is your workout playlist!")
 display_similar_songs (similar_track_uris)
 print()
-print("GOODBYE!)")
+print("GOODBYE!")
+print()
